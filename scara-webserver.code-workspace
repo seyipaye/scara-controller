@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "../scara-webserver"
+		},
+		{
+			"name": "scara-controller",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"array": "cpp",
+			"*.tcc": "cpp",
+			"string": "cpp",
+			"vector": "cpp",
+			"string_view": "cpp",
+			"functional": "cpp",
+			"limits": "cpp",
+			"ostream": "cpp",
+			"ranges": "cpp",
+			"ratio": "cpp",
+			"streambuf": "cpp",
+			"tuple": "cpp"
+		}
+	}
+}
