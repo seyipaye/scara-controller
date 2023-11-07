@@ -1,65 +1,67 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
-// SoftwareSerial esp8266(2, 3);
+
 #define serialCommunicationSpeed 115200
-#define DEBUG true
-int delay_time = 0;
 
 // Uplaod to UNO
 
 void setup()
 {
-  // put your setup code here, to run once:
   Serial.begin(serialCommunicationSpeed);
-  // esp8266.begin(serialCommunicationSpeed);
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
-int data;
-// String mee;
-// char x;
-
 void loop()
 {
-  // bool isCommand = false;
   if (Serial.available() > 0)
   {
-    int receivedInt;
+    String receivedString = Serial.readString(); // enter is automatically added to the back buffer '\n'
 
-    // Read the integer from the Serial Monitor
-    receivedInt = Serial.parseInt();
+    // Check if a valid string was received
+    Serial.print("You entered: ");
+    Serial.println(receivedString);
+    parse(receivedString);
+  }
+}
 
-    delay_time = receivedInt;
-    blink(delay_time);
+void parse(String content)
+{
 
-    // Check if a valid integer was received
-    if ((!Serial.available() || Serial.peek() == '\n') && receivedInt != 0)
-    {
-      // Echo the received integer back to the Serial Monitor
-      // Serial.print("You entered: ");
-      // Serial.println(receivedInt);
-      // delay_time = receivedInt;
-      // blink(delay_time);
-      // Optionally, you can perform some actions based on the received integer here
-    }
+  // Send a message to the ESP8266
+  // Serial.write("change");
+
+  // Extract the data from the string and put into separate integer variables (data[] array)
+  int values[10];
+
+  for (int i = 0; i < 10; i++)
+  {
+    int index = content.indexOf(",");                      // locate the first ","
+    values[i] = atol(content.substring(0, index).c_str()); // Extract the number from start to the ","
+    content = content.substring(index + 1);                // Remove the number from the string
   }
 
-  // blink(delay_time);
+  // Print the extracted integers
+  for (int i = 0; i < 9; i++)
+  {
+    Serial.print("Value ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println();
 
-  //  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-  //  delay(delay_time * 1000);                      // wait for a second
-  //  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-  //  delay(1000);
+    int value = values[i];
+    blink(value);
+    delay(500);
+  }
 
-  // if ((char)x == '\n') {
-  //   data = mee.toInt();
-  //   Serial.println(data);
-  //   mee = "";
-  // }
-
-  // if (mySUART.available() > 0)
+  // for (int i = 0; i < numberOfBlinks; i++)
   // {
-  //   Serial.write((char)mySUART.read());
+  //   // Turn the LED on
+  //   digitalWrite(LED_BUILTIN, HIGH); // turn the LED on (HIGH is the voltage level)
+  //   delay(blinkInterval);
+
+  //   // Turn the LED off
+  //   digitalWrite(LED_BUILTIN, LOW); // turn the LED off by making the voltage LOW
+  //   delay(200);
   // }
 }
 
