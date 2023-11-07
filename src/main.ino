@@ -2,6 +2,7 @@
 #include <SoftwareSerial.h>
 
 #define serialCommunicationSpeed 115200
+bool debug = true;
 
 // Uplaod to UNO
 
@@ -52,17 +53,6 @@ void parse(String content)
     blink(value);
     delay(500);
   }
-
-  // for (int i = 0; i < numberOfBlinks; i++)
-  // {
-  //   // Turn the LED on
-  //   digitalWrite(LED_BUILTIN, HIGH); // turn the LED on (HIGH is the voltage level)
-  //   delay(blinkInterval);
-
-  //   // Turn the LED off
-  //   digitalWrite(LED_BUILTIN, LOW); // turn the LED off by making the voltage LOW
-  //   delay(200);
-  // }
 }
 
 void blink(int numberOfBlinks)
