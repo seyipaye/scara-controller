@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
+#include <scara.h>
 
 #define serialCommunicationSpeed 115200
 bool debug = true;
@@ -8,12 +9,16 @@ bool debug = true;
 
 void setup()
 {
+  setup_scara();
+  return;
   Serial.begin(serialCommunicationSpeed);
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
 {
+  loop_scara();
+  return;
   if (Serial.available() > 0)
   {
     String receivedString = Serial.readString(); // enter is automatically added to the back buffer '\n'

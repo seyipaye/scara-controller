@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
+#define serialCommunicationSpeed 115200
+
 /* void setup()
 {
   // initialize digital pin LED_BUILTIN as an output.
@@ -59,9 +61,75 @@ int zArray[100];
 int gripperArray[100];
 int positionsCounter = 0;
 
-void setup_2()
+void homing()
 {
-    Serial.begin(115200);
+    // Homing Stepper4
+    while (digitalRead(limitSwitch4) != 1)
+    {
+        stepper4.setSpeed(1500);
+        stepper4.runSpeed();
+        stepper4.setCurrentPosition(17000); // When limit switch pressed set position to 0 steps
+        Serial.println("home_loop");
+    }
+    Serial.println("done");
+
+    delay(20);
+    stepper4.moveTo(10000);
+    while (stepper4.currentPosition() != 10000)
+    {
+        stepper4.run();
+        Serial.println("reloop");
+    }
+    Serial.println("done_again");
+
+    // Homing Stepper3
+    while (digitalRead(limitSwitch3) != 1)
+    {
+        stepper3.setSpeed(-1100);
+        stepper3.runSpeed();
+        stepper3.setCurrentPosition(-1662); // When limit switch pressed set position to 0 steps
+    }
+    delay(20);
+
+    stepper3.moveTo(0);
+    while (stepper3.currentPosition() != 0)
+    {
+        stepper3.run();
+    }
+
+    // Homing Stepper2
+    while (digitalRead(limitSwitch2) != 1)
+    {
+        stepper2.setSpeed(-1300);
+        stepper2.runSpeed();
+        stepper2.setCurrentPosition(-5420); // When limit switch pressed set position to -5440 steps
+    }
+    delay(20);
+
+    stepper2.moveTo(0);
+    while (stepper2.currentPosition() != 0)
+    {
+        stepper2.run();
+    }
+
+    // Homing Stepper1
+    while (digitalRead(limitSwitch1) != 1)
+    {
+        stepper1.setSpeed(-1200);
+        stepper1.runSpeed();
+        stepper1.setCurrentPosition(-3955); // When limit switch pressed set position to 0 steps
+    }
+    delay(20);
+    stepper1.moveTo(0);
+    while (stepper1.currentPosition() != 0)
+    {
+        stepper1.run();
+    }
+}
+
+void setup_scara()
+{
+    Serial.begin(serialCommunicationSpeed);
 
     // test_setup();
     // return;
@@ -91,7 +159,7 @@ void setup_2()
     homing();
 }
 
-void loop_2()
+void loop_scara()
 {
 
     // test_loop();
@@ -282,71 +350,5 @@ void serialFlush()
     while (Serial.available() > 0)
     {                  // while there are characters in the serial buffer, because Serial.available is >0
         Serial.read(); // get one character
-    }
-}
-
-void homing()
-{
-    // Homing Stepper4
-    while (digitalRead(limitSwitch4) != 1)
-    {
-        stepper4.setSpeed(1500);
-        stepper4.runSpeed();
-        stepper4.setCurrentPosition(17000); // When limit switch pressed set position to 0 steps
-        Serial.println("home_loop");
-    }
-    Serial.println("done");
-
-    delay(20);
-    stepper4.moveTo(10000);
-    while (stepper4.currentPosition() != 10000)
-    {
-        stepper4.run();
-        Serial.println("reloop");
-    }
-    Serial.println("done_again");
-
-    // Homing Stepper3
-    while (digitalRead(limitSwitch3) != 1)
-    {
-        stepper3.setSpeed(-1100);
-        stepper3.runSpeed();
-        stepper3.setCurrentPosition(-1662); // When limit switch pressed set position to 0 steps
-    }
-    delay(20);
-
-    stepper3.moveTo(0);
-    while (stepper3.currentPosition() != 0)
-    {
-        stepper3.run();
-    }
-
-    // Homing Stepper2
-    while (digitalRead(limitSwitch2) != 1)
-    {
-        stepper2.setSpeed(-1300);
-        stepper2.runSpeed();
-        stepper2.setCurrentPosition(-5420); // When limit switch pressed set position to -5440 steps
-    }
-    delay(20);
-
-    stepper2.moveTo(0);
-    while (stepper2.currentPosition() != 0)
-    {
-        stepper2.run();
-    }
-
-    // Homing Stepper1
-    while (digitalRead(limitSwitch1) != 1)
-    {
-        stepper1.setSpeed(-1200);
-        stepper1.runSpeed();
-        stepper1.setCurrentPosition(-3955); // When limit switch pressed set position to 0 steps
-    }
-    delay(20);
-    stepper1.moveTo(0);
-    while (stepper1.currentPosition() != 0)
-    {
-        stepper1.run();
     }
 }
